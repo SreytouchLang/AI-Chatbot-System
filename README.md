@@ -4,18 +4,57 @@ Document and media-aware chatbot built with a polished frontend plus a FastAPI, 
 
 Developed by **Sreytouch Lang (Jessica)**.
 
+## UI Preview
+
+<p align="center">
+  <img src="docs/images/ui-dashboard-preview.svg" alt="AI Chatbot System dashboard preview" width="100%" />
+</p>
+
+<p align="center">
+  <img src="docs/images/ui-workspace-preview.svg" alt="AI Chatbot System workspace preview" width="100%" />
+</p>
+
 ## Highlights
 
 - branded project identity and API metadata
-- custom frontend at `/` with ingest, chat, and evidence panels
+- custom frontend at `/` with ingest, chat, health, summary, and evidence panels
 - safer startup checks with no dummy vector data inserted
 - centralized configuration for cleaner maintenance
 - stronger request validation and typed API responses
 - user-based chat sessions instead of a hardcoded user id
 - chat responses now include answer, summary, and source snippets
 - local or URL-based document, voice, and video ingestion with duplicate detection, cleanup, transcription, and timeouts
+- audio and video transcription powered by OpenAI, with `ffmpeg` conversion for compatible media formats
 - `/health` and `/about` endpoints for service visibility
 - `.env.example` added for easier setup
+
+## Client Experience
+
+- one-page dashboard with a branded landing section and live service status
+- flexible ingestion from URL or local upload for PDF, DOCX, audio, and video
+- conversational chat experience with persistent user sessions
+- evidence sidebar that shows retrieved source snippets for every answer
+- rolling conversation summary so longer sessions stay easier to follow
+- responsive layout that still presents well on smaller screens
+
+## Backend Features
+
+- FastAPI service layer with typed request and response schemas
+- LangGraph workflow for memory loading, retrieval, answer generation, summarization, and storage
+- Redis-backed chat memory with recent-message windows and rolling summaries
+- Chroma vector storage for retrieval-augmented answers
+- hash-based duplicate detection to avoid re-ingesting the same file content
+- document parsing for PDF and DOCX plus media transcription for voice and video
+- startup health checks and operational endpoints for visibility
+
+## Tech Stack
+
+- FastAPI
+- LangGraph
+- Redis
+- ChromaDB
+- OpenAI APIs for chat, embeddings, and transcription
+- HTML, CSS, and vanilla JavaScript frontend
 
 ## Architecture
 
@@ -34,17 +73,17 @@ Client
 ## Project Structure
 
 ```text
-chat-bot-main/
-├── controllers/     # FastAPI route handlers
-├── core/            # settings and app-level exceptions
-├── db/              # Redis and Chroma helpers
-├── graph/           # LangGraph state and nodes
-├── ingest/          # document and media ingestion pipeline
-├── schemas/         # request and response models
-├── services/        # chat, ingest, and health orchestration
-├── utils/           # model and embedding adapters
-├── .env.example     # sample configuration
-└── main.py          # FastAPI app entrypoint
+AI-Chatbot-System/
+|-- controllers/     # FastAPI route handlers
+|-- core/            # settings and app-level exceptions
+|-- db/              # Redis and Chroma helpers
+|-- graph/           # LangGraph state and nodes
+|-- ingest/          # document and media ingestion pipeline
+|-- schemas/         # request and response models
+|-- services/        # chat, ingest, and health orchestration
+|-- utils/           # model and embedding adapters
+|-- .env.example     # sample configuration
+`-- main.py          # FastAPI app entrypoint
 ```
 
 ## Requirements
@@ -52,6 +91,7 @@ chat-bot-main/
 - Python 3.10+
 - Redis
 - OpenAI API key or another supported LLM provider
+- `ffmpeg` for some audio/video conversion paths
 
 ## Install
 
@@ -105,6 +145,13 @@ API docs:
 http://127.0.0.1:8000/docs
 ```
 
+## Supported Files
+
+- documents: `.pdf`, `.docx`
+- audio: `.mp3`, `.m4a`, `.wav`, `.ogg`, `.flac`, `.mpeg`, `.mpga`
+- convertible audio: `.aac`, `.aif`, `.aiff`, `.caf`, `.wma`
+- video: `.mp4`, `.mov`, `.m4v`, `.avi`, `.mkv`, `.webm`
+
 ## API
 
 ### `GET /`
@@ -138,11 +185,7 @@ Request:
 
 `source_url` also accepts the legacy key `s3_url`.
 
-Supported URL/file types include:
-
-- documents: `.pdf`, `.docx`
-- audio: `.mp3`, `.m4a`, `.wav`, `.ogg`, `.flac`, `.mpeg`, `.mpga`, plus convertible formats like `.aac`, `.aiff`, `.caf`, `.wma`
-- video: `.mp4`, `.mov`, `.m4v`, `.avi`, `.mkv`, `.webm`
+Supported file types are listed above in **Supported Files**.
 
 ### `POST /api/ingest/upload`
 
