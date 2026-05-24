@@ -83,20 +83,23 @@
   <rect x="978" y="432" width="74" height="46" rx="14" fill="#0E1620" stroke="#203341"/>
   <text x="1004" y="461" fill="#EFF4F8" font-size="20" font-family="Arial, sans-serif">3</text>
 
-  <rect x="526" y="510" width="526" height="110" rx="20" fill="#232627" stroke="#424748"/>
+  <rect x="526" y="510" width="526" height="124" rx="20" fill="#232627" stroke="#424748"/>
   <text x="552" y="540" fill="#BFC6CC" font-size="18" font-family="Arial, sans-serif" letter-spacing="1">ASSISTANT</text>
-  <text x="596" y="580" fill="#F6F7F8" font-size="20" font-family="Arial, sans-serif">Upload a document, voice note, or video.</text>
-  <text x="596" y="608" fill="#F6F7F8" font-size="20" font-family="Arial, sans-serif">Answers stay grounded in retrieved source context.</text>
+  <text x="596" y="578" fill="#F6F7F8" font-size="19" font-family="Arial, sans-serif">Upload a document, voice note, or video.</text>
+  <text x="596" y="604" fill="#F6F7F8" font-size="19" font-family="Arial, sans-serif">Answers stay grounded in retrieved</text>
+  <text x="596" y="630" fill="#F6F7F8" font-size="19" font-family="Arial, sans-serif">source context.</text>
 
-  <rect x="680" y="648" width="372" height="92" rx="22" fill="#121B24" stroke="#203341"/>
+  <rect x="680" y="654" width="372" height="104" rx="22" fill="#121B24" stroke="#203341"/>
   <text x="706" y="678" fill="#BFC6CC" font-size="18" font-family="Arial, sans-serif" letter-spacing="1">YOU</text>
-  <text x="706" y="716" fill="#EFF3F6" font-size="20" font-family="Arial, sans-serif">What are the refund terms and payment</text>
-  <text x="706" y="744" fill="#EFF3F6" font-size="20" font-family="Arial, sans-serif">conditions in the uploaded files?</text>
+  <text x="706" y="714" fill="#EFF3F6" font-size="19" font-family="Arial, sans-serif">What are the refund terms and</text>
+  <text x="706" y="740" fill="#EFF3F6" font-size="19" font-family="Arial, sans-serif">payment conditions in the</text>
+  <text x="706" y="766" fill="#EFF3F6" font-size="19" font-family="Arial, sans-serif">uploaded files?</text>
 
-  <rect x="526" y="764" width="526" height="112" rx="22" fill="#1A232C" stroke="#203341"/>
-  <text x="552" y="794" fill="#BFC6CC" font-size="18" font-family="Arial, sans-serif" letter-spacing="1">ASSISTANT</text>
-  <text x="552" y="830" fill="#EFF3F6" font-size="19" font-family="Arial, sans-serif">Refunds are allowed within 14 days with a valid receipt.</text>
-  <text x="552" y="856" fill="#EFF3F6" font-size="19" font-family="Arial, sans-serif">Invoices are due within 30 days unless custom terms apply.</text>
+  <rect x="526" y="778" width="526" height="126" rx="22" fill="#1A232C" stroke="#203341"/>
+  <text x="552" y="808" fill="#BFC6CC" font-size="18" font-family="Arial, sans-serif" letter-spacing="1">ASSISTANT</text>
+  <text x="552" y="844" fill="#EFF3F6" font-size="18" font-family="Arial, sans-serif">Refunds are allowed within 14 days</text>
+  <text x="552" y="868" fill="#EFF3F6" font-size="18" font-family="Arial, sans-serif">with a valid receipt. Invoices are due</text>
+  <text x="552" y="892" fill="#EFF3F6" font-size="18" font-family="Arial, sans-serif">within 30 days unless custom terms apply.</text>
 
   <text x="1148" y="418" fill="#57D4E8" font-size="17" font-family="Arial, sans-serif" letter-spacing="2">EVIDENCE</text>
   <text x="1148" y="462" fill="#F7F0E4" font-size="34" font-family="Georgia, serif" font-weight="700">Source</text>
@@ -106,15 +109,17 @@
   <text x="1172" y="574" fill="#ECF1F4" font-size="17" font-family="Arial, sans-serif">User is reviewing refunds and payment timing</text>
   <text x="1172" y="598" fill="#ECF1F4" font-size="17" font-family="Arial, sans-serif">from a policy document and a meeting transcript.</text>
 
-  <rect x="1148" y="648" width="292" height="104" rx="22" fill="#121B24" stroke="#203341"/>
+  <rect x="1148" y="648" width="292" height="114" rx="22" fill="#121B24" stroke="#203341"/>
   <text x="1172" y="676" fill="#C4CCD2" font-size="14" font-family="Arial, sans-serif">SOURCE 1  -  PAGE 4</text>
   <text x="1172" y="706" fill="#F6F7F8" font-size="18" font-family="Arial, sans-serif">customer-support-policy.pdf</text>
-  <text x="1172" y="736" fill="#D7DFE6" font-size="16" font-family="Arial, sans-serif">Refunds may be requested within 14 days when</text>
-  <text x="1172" y="758" fill="#D7DFE6" font-size="16" font-family="Arial, sans-serif">the original receipt and account details are provided.</text>
+  <text x="1172" y="734" fill="#D7DFE6" font-size="15" font-family="Arial, sans-serif">Refunds may be requested within 14 days</text>
+  <text x="1172" y="756" fill="#D7DFE6" font-size="15" font-family="Arial, sans-serif">when the original receipt and account</text>
+  <text x="1172" y="778" fill="#D7DFE6" font-size="15" font-family="Arial, sans-serif">details are provided.</text>
 
-  <rect x="1148" y="770" width="292" height="104" rx="22" fill="#121B24" stroke="#203341"/>
-  <text x="1172" y="798" fill="#C4CCD2" font-size="14" font-family="Arial, sans-serif">SOURCE 2  -  TRANSCRIPT</text>
-  <text x="1172" y="828" fill="#F6F7F8" font-size="18" font-family="Arial, sans-serif">meeting-recording.mov</text>
-  <text x="1172" y="858" fill="#D7DFE6" font-size="16" font-family="Arial, sans-serif">Finance confirmed invoices should be paid within</text>
-  <text x="1172" y="880" fill="#D7DFE6" font-size="16" font-family="Arial, sans-serif">30 days unless enterprise terms are approved.</text>
+  <rect x="1148" y="780" width="292" height="116" rx="22" fill="#121B24" stroke="#203341"/>
+  <text x="1172" y="808" fill="#C4CCD2" font-size="14" font-family="Arial, sans-serif">SOURCE 2  -  TRANSCRIPT</text>
+  <text x="1172" y="838" fill="#F6F7F8" font-size="18" font-family="Arial, sans-serif">meeting-recording.mov</text>
+  <text x="1172" y="866" fill="#D7DFE6" font-size="15" font-family="Arial, sans-serif">Finance confirmed invoices should be paid</text>
+  <text x="1172" y="888" fill="#D7DFE6" font-size="15" font-family="Arial, sans-serif">within 30 days unless enterprise terms</text>
+  <text x="1172" y="910" fill="#D7DFE6" font-size="15" font-family="Arial, sans-serif">are approved.</text>
 </svg>
