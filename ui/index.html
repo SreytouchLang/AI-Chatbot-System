@@ -14,6 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
@@ -70,6 +71,13 @@
       </header>
 
       <main class="workspace">
+        <section id="setup-banner" class="setup-banner" hidden>
+          <span id="setup-banner-kicker" class="setup-banner-kicker">Setup Required</span>
+          <p id="setup-banner-message">
+            Configure your provider keys in .env before ingesting files or sending questions.
+          </p>
+        </section>
+
         <aside class="panel left-panel">
           <div class="panel-heading">
             <p class="panel-kicker">Knowledge Intake</p>

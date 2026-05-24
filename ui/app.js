@@ -5,6 +5,9 @@ const state = {
 const elements = {
   projectName: document.querySelector("#project-name"),
   projectVersion: document.querySelector("#project-version"),
+  setupBanner: document.querySelector("#setup-banner"),
+  setupBannerKicker: document.querySelector("#setup-banner-kicker"),
+  setupBannerMessage: document.querySelector("#setup-banner-message"),
   healthPill: document.querySelector("#health-pill"),
   redisStatus: document.querySelector("#redis-status"),
   vectorStatus: document.querySelector("#vector-status"),
@@ -49,10 +52,34 @@ async function requestJson(url, options = {}) {
     const details = Array.isArray(rawDetails)
       ? rawDetails.map((item) => item.msg || item.message || "Validation error").join(", ")
       : rawDetails?.reason || rawDetails || payload.error || "Request failed";
-    throw new Error(details);
+    throw new Error(humanizeErrorMessage(details));
   }
 
   return payload;
+}
+
+function humanizeErrorMessage(message) {
+  const normalized = String(message || "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!normalized) {
+    return "Something went wrong. Please try again.";
+  }
+
+  if (/incorrect api key provided|invalid_api_key/i.test(normalized)) {
+    return "OpenAI API key missing or invalid. Add OPENAI_API_KEY to .env, restart the app, then refresh this page.";
+  }
+
+  if (normalized.length > 220) {
+    return `${normalized.slice(0, 217)}...`;
+  }
+
+  return normalized;
+}
+
+function isApiKeyError(message) {
+  return /incorrect api key provided|invalid_api_key/i.test(String(message || ""));
 }
 
 function setFeedback(node, message, tone = "neutral") {
@@ -64,6 +91,49 @@ function setHealthBadge(status) {
   elements.healthPill.className =
     status === "ok" ? "pill pill-ok" : "pill pill-bad";
   elements.healthPill.textContent = status === "ok" ? "Healthy" : "Degraded";
+}
+
+function setControlsDisabled(disabled) {
+  document
+    .querySelectorAll("#ingest-form input, #ingest-form button, #chat-form input, #chat-form select, #chat-form textarea, #chat-form button")
+    .forEach((control) => {
+      control.disabled = disabled;
+    });
+
+  elements.promptChips.forEach((chip) => {
+    chip.disabled = disabled;
+  });
+
+  document.querySelector(".left-panel")?.classList.toggle("is-disabled", disabled);
+  document.querySelector(".chat-panel")?.classList.toggle("is-disabled", disabled);
+}
+
+function applySetupState(setup) {
+  const shouldShowBanner = Boolean(setup) && setup.status && setup.status !== "ok";
+  if (!shouldShowBanner) {
+    elements.setupBanner.hidden = true;
+    elements.setupBanner.dataset.state = "ok";
+    setControlsDisabled(false);
+    return;
+  }
+
+  elements.setupBanner.hidden = false;
+  elements.setupBanner.dataset.state = setup.ready === false ? "blocking" : "info";
+  elements.setupBannerKicker.textContent =
+    setup.ready === false ? "Setup Required" : "Demo Mode";
+  elements.setupBannerMessage.textContent =
+    setup.message || "Setup required before this app can send requests.";
+  setControlsDisabled(setup.ready === false);
+  setFeedback(
+    elements.chatFeedback,
+    setup.message || "Setup required before this app can send requests.",
+    setup.ready === false ? "error" : "neutral",
+  );
+  setFeedback(
+    elements.ingestFeedback,
+    setup.message || "Setup required before this app can send requests.",
+    setup.ready === false ? "error" : "neutral",
+  );
 }
 
 function deriveFileNameFromValue(value) {
@@ -82,6 +152,11 @@ function deriveFileNameFromValue(value) {
 }
 
 function appendMessage(role, content) {
+  const starterCard = elements.chatLog.querySelector(".starter-card");
+  if (starterCard) {
+    starterCard.remove();
+  }
+
   const article = document.createElement("article");
   article.className = `message ${role}`;
 
@@ -129,6 +204,7 @@ async function loadProjectMeta() {
     const about = await requestJson("/about");
     elements.projectName.textContent = about.project;
     elements.projectVersion.textContent = about.version;
+    applySetupState(about.setup);
   } catch (error) {
     elements.projectName.textContent = "Unavailable";
     elements.projectVersion.textContent = "--";
@@ -141,12 +217,21 @@ async function loadHealth() {
     setHealthBadge(health.status || "degraded");
 
     const redisData = health.data?.redis || {};
+    const setupData = health.data?.setup || {};
     const vectorData = health.data?.vectorstore || {};
 
     elements.redisStatus.textContent =
       redisData.status === "error"
         ? redisData.message || "Unavailable"
         : redisData.status || "Unknown";
+
+    if (setupData.status && setupData.status !== "ok") {
+      applySetupState({
+        ready: setupData.status !== "error",
+        status: setupData.status,
+        message: setupData.message || "Setup required before this app can send requests.",
+      });
+    }
 
     const count = typeof vectorData.documents === "number"
       ? ` (${vectorData.documents} docs)`
@@ -164,6 +249,16 @@ async function loadHealth() {
 
 async function handleIngestSubmit(event) {
   event.preventDefault();
+
+  if (elements.ingestForm.querySelector("button[type='submit']")?.disabled) {
+    setFeedback(
+      elements.ingestFeedback,
+      "Setup required: add your provider key to .env, restart the app, and refresh this page.",
+      "error",
+    );
+    return;
+  }
+
   setFeedback(elements.ingestFeedback, "Ingesting file...", "neutral");
 
   try {
@@ -217,7 +312,8 @@ async function handleIngestSubmit(event) {
     }
     await loadHealth();
   } catch (error) {
-    setFeedback(elements.ingestFeedback, error.message, "error");
+    const friendlyMessage = humanizeErrorMessage(error.message);
+    setFeedback(elements.ingestFeedback, friendlyMessage, "error");
     elements.ingestStatus.textContent = "failed";
     elements.ingestPages.textContent = "0";
     elements.ingestChunks.textContent = "0";
@@ -239,6 +335,15 @@ function handleSourceUrlBlur() {
 
 async function handleChatSubmit(event) {
   event.preventDefault();
+
+  if (elements.chatForm.querySelector("button[type='submit']")?.disabled) {
+    setFeedback(
+      elements.chatFeedback,
+      "Setup required: add your provider key to .env, restart the app, and refresh this page.",
+      "error",
+    );
+    return;
+  }
 
   const question = elements.question.value.trim();
   if (!question) {
@@ -267,8 +372,12 @@ async function handleChatSubmit(event) {
     renderSources(result.sources || []);
     setFeedback(elements.chatFeedback, "Answer ready. Source evidence updated on the right.", "success");
   } catch (error) {
-    appendMessage("assistant", "I couldn’t generate an answer right now.");
-    setFeedback(elements.chatFeedback, error.message, "error");
+    const friendlyMessage = humanizeErrorMessage(error.message);
+    const assistantMessage = isApiKeyError(error.message)
+      ? "I need a valid OpenAI API key before I can answer questions. Add OPENAI_API_KEY to .env, restart the app, and try again."
+      : "I couldn’t generate an answer right now.";
+    appendMessage("assistant", assistantMessage);
+    setFeedback(elements.chatFeedback, friendlyMessage, "error");
   }
 }
 

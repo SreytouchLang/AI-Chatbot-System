@@ -3,7 +3,7 @@ from pathlib import Path
 
 from openai import OpenAI
 
-from core.config import get_settings
+from core.config import get_settings, is_transcription_available
 from core.exceptions import IngestionError
 
 
@@ -14,6 +14,10 @@ def get_transcription_client() -> OpenAI:
         raise IngestionError(
             "Media transcription currently supports only the OpenAI provider.",
             details={"provider": settings.transcription_provider},
+        )
+    if not is_transcription_available():
+        raise IngestionError(
+            "Audio and video transcription need a real OPENAI_API_KEY. PDF and DOCX still work in local mode."
         )
     return OpenAI()
 

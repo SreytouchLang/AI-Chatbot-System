@@ -1,9 +1,9 @@
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from core.config import get_settings
+from core.config import get_settings, is_llm_remote_available
+from utils.local_assistant import build_local_answer
 from utils.llm_adapter import get_llm
 
-chat = get_llm(temperature=0, max_tokens=120)
 settings = get_settings()
 
 
@@ -19,18 +19,19 @@ def generate_answer(state):
         for m in recent
     )
 
-    response = chat.invoke(
-        [
-            SystemMessage(
-                content=(
-                    "You are a careful AI assistant for a document-aware chatbot. "
-                    "Use retrieved document context first when it is relevant. "
-                    "If the documents do not contain the answer, say that clearly instead of inventing facts. "
-                    "Reply in the same primary language as the user's latest message."
-                )
-            ),
-            HumanMessage(
-                content=f"""
+    if is_llm_remote_available():
+        response = get_llm(temperature=0, max_tokens=120).invoke(
+            [
+                SystemMessage(
+                    content=(
+                        "You are a careful AI assistant for a document-aware chatbot. "
+                        "Use retrieved document context first when it is relevant. "
+                        "If the documents do not contain the answer, say that clearly instead of inventing facts. "
+                        "Reply in the same primary language as the user's latest message."
+                    )
+                ),
+                HumanMessage(
+                    content=f"""
 Conversation summary:
 {summary or "No summary yet."}
 
@@ -49,11 +50,16 @@ Rules:
 - Be concise, clear, and useful.
 - Do not mention internal implementation details.
 """.strip()
-            ),
-        ]
-    )
-
-    answer = response.content.strip() if isinstance(response.content, str) else str(response.content)
+                )
+            ]
+        )
+        answer = response.content.strip() if isinstance(response.content, str) else str(response.content)
+    else:
+        answer = build_local_answer(
+            question=state["question"],
+            context=context,
+            source_documents=state.get("source_documents") or [],
+        )
 
     return {
         "answer": answer,

@@ -18,6 +18,7 @@ Developed by **Sreytouch Lang (Jessica)**.
 
 - branded project identity and API metadata
 - custom frontend at `/` with ingest, chat, health, summary, and evidence panels
+- demo mode fallback so PDF and DOCX workflows still work without an OpenAI key
 - safer startup checks with no dummy vector data inserted
 - centralized configuration for cleaner maintenance
 - stronger request validation and typed API responses
@@ -31,6 +32,7 @@ Developed by **Sreytouch Lang (Jessica)**.
 ## Client Experience
 
 - one-page dashboard with a branded landing section and live service status
+- friendly setup banner that explains whether the app is in full mode or demo mode
 - flexible ingestion from URL or local upload for PDF, DOCX, audio, and video
 - conversational chat experience with persistent user sessions
 - evidence sidebar that shows retrieved source snippets for every answer
@@ -43,6 +45,7 @@ Developed by **Sreytouch Lang (Jessica)**.
 - LangGraph workflow for memory loading, retrieval, answer generation, summarization, and storage
 - Redis-backed chat memory with recent-message windows and rolling summaries
 - Chroma vector storage for retrieval-augmented answers
+- local hash-embedding and answer fallback when OpenAI is not configured
 - hash-based duplicate detection to avoid re-ingesting the same file content
 - document parsing for PDF and DOCX plus media transcription for voice and video
 - startup health checks and operational endpoints for visibility
@@ -53,7 +56,8 @@ Developed by **Sreytouch Lang (Jessica)**.
 - LangGraph
 - Redis
 - ChromaDB
-- OpenAI APIs for chat, embeddings, and transcription
+- optional OpenAI APIs for upgraded chat, embeddings, and transcription
+- local fallback embeddings and answer generation for demo-friendly PDF and DOCX workflows
 - HTML, CSS, and vanilla JavaScript frontend
 
 ## Architecture
@@ -90,8 +94,8 @@ AI-Chatbot-System/
 
 - Python 3.10+
 - Redis
-- OpenAI API key or another supported LLM provider
-- `ffmpeg` for some audio/video conversion paths
+- OpenAI API key only if you want upgraded OpenAI answers or audio/video transcription
+- `ffmpeg` only for some audio/video conversion paths
 
 ## Install
 
@@ -114,10 +118,16 @@ APP_NAME=AI Chatbot System
 DEVELOPER_DISPLAY_NAME=Sreytouch Lang (Jessica)
 ```
 
-Minimum API setup:
+Optional OpenAI setup:
 
 ```bash
 OPENAI_API_KEY=your_api_key
+```
+
+Recommended local default for quieter logs:
+
+```bash
+LANGSMITH_TRACING=false
 ```
 
 Transcription defaults for audio and video:
@@ -127,11 +137,31 @@ TRANSCRIPTION_PROVIDER=openai
 TRANSCRIPTION_MODEL=gpt-4o-mini-transcribe
 ```
 
+## Modes
+
+- `Demo Mode`: no valid `OPENAI_API_KEY` is set. PDF and DOCX ingestion still work, retrieval still works, and the chat stays grounded in uploaded file content.
+- `Full Mode`: a valid `OPENAI_API_KEY` is set. OpenAI-powered answers, embeddings, and audio/video transcription are enabled.
+
 ## Run
 
 ```bash
 uvicorn main:app --reload
 ```
+
+If your global Python does not have the project dependencies, use the repo venv instead:
+
+```bash
+source .venv/bin/activate
+python -m uvicorn main:app --reload
+```
+
+Or start it in one command:
+
+```bash
+./run.sh
+```
+
+If `OPENAI_API_KEY` is still a placeholder, the app starts in `Demo Mode` instead of failing.
 
 App:
 
@@ -160,7 +190,7 @@ Serves the frontend dashboard UI.
 
 ### `GET /about`
 
-Returns branded project metadata.
+Returns branded project metadata plus setup mode information.
 
 ### `GET /api/info`
 
@@ -168,7 +198,7 @@ Returns the app name, version, and developer credit as JSON.
 
 ### `GET /health`
 
-Checks Redis and vector store readiness.
+Checks setup state, Redis, and vector store readiness.
 
 ### `POST /api/ingest`
 
@@ -202,6 +232,8 @@ curl -X POST "http://127.0.0.1:8000/api/ingest/upload" \
 ### `POST /api/chat`
 
 Ask a question using memory plus retrieved document context.
+
+In `Demo Mode`, this endpoint still works for PDF and DOCX-backed retrieval without requiring OpenAI.
 
 Request:
 
@@ -238,6 +270,8 @@ Response shape:
 - If the uploaded files do not contain the answer, the assistant is instructed to say that clearly instead of inventing facts.
 - Conversation history is stored in Redis with both recent messages and a rolling summary.
 - Duplicate ingestion is detected by file hash.
+- `Demo Mode` is intended for local demos and document-grounded workflows when no real OpenAI key is configured.
 - Audio and video ingestion rely on transcription, so a valid `OPENAI_API_KEY` is required for those file types.
+- The UI shows a `Demo Mode` banner when OpenAI features are unavailable, instead of blocking the whole app.
 - Some media formats are converted with `ffmpeg` before transcription.
 - The visible project branding now credits **Sreytouch Lang (Jessica)** by default.

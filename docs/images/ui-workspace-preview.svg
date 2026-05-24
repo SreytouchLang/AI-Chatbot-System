@@ -18,7 +18,7 @@
   <rect x="1136" y="120" width="346" height="650" rx="30" fill="url(#panel2)" stroke="#1F3644"/>
 
   <text x="152" y="174" fill="#57D4E8" font-size="18" font-family="Arial, sans-serif" letter-spacing="2">KNOWLEDGE INTAKE</text>
-  <text x="152" y="222" fill="#F7F0E4" font-size="48" font-family="Georgia, serif" font-weight="700">Ingest Files</text>
+  <text x="152" y="220" fill="#F7F0E4" font-size="42" font-family="Georgia, serif" font-weight="700">Ingest Files</text>
   <text x="152" y="280" fill="#D5DCE4" font-size="24" font-family="Arial, sans-serif">File Name</text>
   <rect x="152" y="298" width="272" height="60" rx="18" fill="#0E1620" stroke="#203341"/>
   <text x="176" y="336" fill="#98A7B4" font-size="22" font-family="Arial, sans-serif">meeting-notes-q2</text>
@@ -34,7 +34,7 @@
   <text x="176" y="777" fill="#D7EEF5" font-size="20" font-family="Arial, sans-serif">Stored 18 chunks from meeting-notes-q2.mov</text>
 
   <text x="528" y="174" fill="#57D4E8" font-size="18" font-family="Arial, sans-serif" letter-spacing="2">CONVERSATION</text>
-  <text x="528" y="222" fill="#F7F0E4" font-size="50" font-family="Georgia, serif" font-weight="700">Ask the assistant</text>
+  <text x="528" y="218" fill="#F7F0E4" font-size="42" font-family="Georgia, serif" font-weight="700">Ask the assistant</text>
 
   <rect x="528" y="286" width="548" height="114" rx="22" fill="#232627" stroke="#424748"/>
   <text x="556" y="316" fill="#BEC6CC" font-size="18" font-family="Arial, sans-serif" letter-spacing="1">ASSISTANT</text>
@@ -52,7 +52,8 @@
   <text x="556" y="646" fill="#EFF3F6" font-size="21" font-family="Arial, sans-serif">Enterprise terms require approval before extension.</text>
 
   <text x="1172" y="174" fill="#57D4E8" font-size="18" font-family="Arial, sans-serif" letter-spacing="2">EVIDENCE</text>
-  <text x="1172" y="222" fill="#F7F0E4" font-size="48" font-family="Georgia, serif" font-weight="700">Source Context</text>
+  <text x="1172" y="214" fill="#F7F0E4" font-size="34" font-family="Georgia, serif" font-weight="700">Source</text>
+  <text x="1172" y="252" fill="#F7F0E4" font-size="34" font-family="Georgia, serif" font-weight="700">Context</text>
 
   <rect x="1172" y="286" width="274" height="118" rx="22" fill="#16212B" stroke="#203341"/>
   <text x="1196" y="316" fill="#57D4E8" font-size="15" font-family="Arial, sans-serif" letter-spacing="1">CONVERSATION SUMMARY</text>

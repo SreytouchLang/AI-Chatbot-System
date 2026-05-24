@@ -6,6 +6,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+_PLACEHOLDER_FRAGMENTS = (
+    "your_api_key",
+    "your_openai",
+    "your_anthropic",
+    "your_groq",
+    "placeholder",
+    "replace_me",
+    "changeme",
+)
+
 
 def _get_int(name: str, default: int) -> int:
     value = os.getenv(name)
@@ -16,6 +26,18 @@ def _get_int(name: str, default: int) -> int:
         return int(value)
     except ValueError:
         return default
+
+
+def has_configured_secret(name: str) -> bool:
+    value = (os.getenv(name) or "").strip()
+    if not value:
+        return False
+
+    lowered = value.lower()
+    if lowered.startswith("your_"):
+        return False
+
+    return not any(fragment in lowered for fragment in _PLACEHOLDER_FRAGMENTS)
 
 
 @dataclass(frozen=True)
@@ -75,3 +97,28 @@ def get_settings() -> Settings:
         ingest_chunk_overlap=_get_int("INGEST_CHUNK_OVERLAP", 120),
         download_timeout_seconds=_get_int("DOWNLOAD_TIMEOUT_SECONDS", 30),
     )
+
+
+def is_llm_remote_available() -> bool:
+    settings = get_settings()
+    if settings.llm_provider == "openai":
+        return has_configured_secret("OPENAI_API_KEY")
+    if settings.llm_provider == "anthropic":
+        return has_configured_secret("ANTHROPIC_API_KEY")
+    if settings.llm_provider == "groq":
+        return has_configured_secret("GROQ_API_KEY")
+    return False
+
+
+def is_embedding_remote_available() -> bool:
+    settings = get_settings()
+    if settings.embedding_provider == "openai":
+        return has_configured_secret("OPENAI_API_KEY")
+    return True
+
+
+def is_transcription_available() -> bool:
+    settings = get_settings()
+    if settings.transcription_provider == "openai":
+        return has_configured_secret("OPENAI_API_KEY")
+    return False

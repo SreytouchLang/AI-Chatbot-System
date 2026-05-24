@@ -11,7 +11,7 @@ from controllers.chat_controller import router as chat_router
 from controllers.ingest_controller import router as ingest_router
 from core.config import get_settings
 from core.exceptions import AppError
-from services.system_service import get_system_health, log_startup_health
+from services.system_service import get_setup_status, get_system_health, log_startup_health
 
 logging.basicConfig(level=logging.INFO)
 
@@ -73,6 +73,7 @@ def about():
         "version": settings.app_version,
         "developer": settings.developer_display_name,
         "description": settings.app_description,
+        "setup": get_setup_status(),
     }
 
 

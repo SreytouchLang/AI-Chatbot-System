@@ -231,9 +231,51 @@ textarea {
 
 .workspace {
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr) 230px;
+  grid-template-columns: 238px minmax(0, 1fr) 252px;
   gap: 18px;
   align-items: start;
+}
+
+.setup-banner {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 125, 102, 0.28);
+  background: linear-gradient(180deg, rgba(87, 33, 28, 0.88), rgba(56, 20, 18, 0.88));
+  box-shadow: var(--shadow);
+}
+
+.setup-banner[data-state="info"] {
+  border: 1px solid rgba(255, 191, 105, 0.24);
+  background: linear-gradient(180deg, rgba(55, 42, 18, 0.88), rgba(37, 30, 16, 0.88));
+}
+
+.setup-banner[hidden] {
+  display: none;
+}
+
+.setup-banner-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffc5bb;
+}
+
+.setup-banner[data-state="info"] .setup-banner-kicker {
+  color: #ffd7a0;
+}
+
+.setup-banner p {
+  margin: 0;
+  line-height: 1.45;
+  color: #ffe3de;
+  overflow-wrap: break-word;
+}
+
+.setup-banner[data-state="info"] p {
+  color: #f8e8c8;
 }
 
 .panel-heading {
@@ -248,7 +290,9 @@ textarea {
 }
 
 .panel h2 {
-  font-size: 1.45rem;
+  font-size: clamp(1.28rem, 1.03rem + 0.95vw, 1.45rem);
+  line-height: 1.05;
+  text-wrap: balance;
 }
 
 .stack {
@@ -264,6 +308,7 @@ textarea {
 .field span {
   font-size: 0.82rem;
   color: var(--muted);
+  overflow-wrap: break-word;
 }
 
 .field input,
@@ -315,6 +360,7 @@ textarea {
   padding: 10px 12px;
   font-size: 0.87rem;
   line-height: 1.45;
+  overflow-wrap: break-word;
 }
 
 .feedback.neutral {
@@ -332,6 +378,17 @@ textarea {
   color: #ffd0c8;
 }
 
+.is-disabled {
+  opacity: 0.62;
+}
+
+.is-disabled .button-primary,
+.chip:disabled,
+.button-primary:disabled {
+  cursor: not-allowed;
+  filter: saturate(0.72);
+}
+
 .stats-card,
 .summary-card {
   margin-top: 14px;
@@ -339,6 +396,7 @@ textarea {
   padding: 12px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(167, 196, 213, 0.1);
+  overflow: hidden;
 }
 
 .stats-list {
@@ -352,17 +410,21 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+  min-width: 0;
 }
 
 .stats-list dt {
   color: var(--muted);
   font-size: 0.87rem;
+  overflow-wrap: break-word;
 }
 
 .stats-list dd {
   margin: 0;
   font-weight: 700;
   font-size: 0.92rem;
+  overflow-wrap: break-word;
+  text-align: right;
 }
 
 .chat-controls {
@@ -401,6 +463,7 @@ textarea {
   border-radius: 13px;
   border: 1px solid rgba(167, 196, 213, 0.12);
   animation: rise 280ms ease;
+  overflow: hidden;
 }
 
 .message.user {
@@ -417,6 +480,9 @@ textarea {
   color: #f8f4ec;
   white-space: pre-wrap;
   font-size: 0.89rem;
+  max-width: 100%;
+  text-align: left;
+  overflow-wrap: break-word;
 }
 
 .message-meta {
@@ -429,6 +495,10 @@ textarea {
 
 .starter-card {
   border-style: dashed;
+}
+
+.starter-card p {
+  max-width: 44ch;
 }
 
 .composer {
@@ -446,6 +516,7 @@ textarea {
 .composer-bar .feedback {
   margin-top: 0;
   flex: 1;
+  min-width: 0;
 }
 
 .sources-list {
@@ -460,11 +531,15 @@ textarea {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(167, 196, 213, 0.12);
   animation: rise 280ms ease;
+  overflow: hidden;
 }
 
 .source-card h3 {
   margin: 6px 0 0;
   font-size: 0.95rem;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  text-wrap: balance;
 }
 
 .source-card p {
@@ -472,6 +547,7 @@ textarea {
   color: var(--muted);
   line-height: 1.4;
   font-size: 0.87rem;
+  overflow-wrap: break-word;
 }
 
 .source-card .meta {
@@ -482,11 +558,18 @@ textarea {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  line-height: 1.35;
 }
 
 .empty-state {
   border-style: dashed;
   color: var(--muted);
+}
+
+.status-row strong,
+.status-grid p,
+.summary-card p {
+  overflow-wrap: break-word;
 }
 
 @keyframes rise {
